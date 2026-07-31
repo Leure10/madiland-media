@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Token — madiland.ai</title>
+<style>
+  body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+       max-width:760px;margin:0 auto;padding:40px 20px;color:#1c1e21;background:#f0f2f5}
+  .card{background:#fff;border-radius:12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  h1{font-size:22px;margin:0 0 6px}
+  .sub{color:#65676b;margin:0 0 22px;font-size:14px}
+  textarea{width:100%;height:130px;font:13px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;
+           padding:12px;border:1px solid #ccd0d5;border-radius:8px;resize:vertical;
+           box-sizing:border-box;background:#f7f8fa}
+  button{margin-top:12px;background:#0866ff;color:#fff;border:0;border-radius:8px;
+         padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer}
+  button:hover{background:#0653cc}
+  .ok{color:#1a7f37;font-weight:600} .bad{color:#c9252d;font-weight:600}
+  .note{margin-top:20px;padding:14px;background:#fff8e1;border-radius:8px;font-size:14px}
+  code{background:#eaecef;padding:1px 5px;border-radius:4px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Token de acces</h1>
+  <p class="sub">Pagina asta doar citește token-ul din adresă și ți-l arată. Nu îl trimite nicăieri &mdash; partea de după <code>#</code> nu ajunge niciodată pe server.</p>
+
+  <div id="status"></div>
+  <textarea id="tok" readonly placeholder="aici va apărea token-ul"></textarea>
+  <button id="copy">Copiază token-ul</button>
+
+  <div class="note">
+    <b>Ce faci mai departe:</b> apeși „Copiază", apoi îl lipești în fișierul
+    <code>DATE_PENTRU_CLAUDIU.txt</code> de pe Desktop, la linia <code>TOKEN =</code>,
+    salvezi cu Cmd+S și scrii „gata" în chat.
+  </div>
+</div>
+
+<script>
+(function () {
+  var h = window.location.hash.substring(1);
+  var p = new URLSearchParams(h);
+  var t = p.get('access_token');
+  var st = document.getElementById('status');
+  var ta = document.getElementById('tok');
+
+  if (t) {
+    ta.value = t;
+    var exp = p.get('expires_in');
+    var zile = exp ? Math.round(exp / 86400) : null;
+    st.innerHTML = '<p class="ok">&#10003; Token primit &mdash; ' + t.length +
+      ' caractere' + (zile ? ', valabil ~' + zile + ' zile' : '') + '</p>';
+  } else {
+    var q = new URLSearchParams(window.location.search);
+    var err = q.get('error_description') || p.get('error_description') ||
+              q.get('error') || p.get('error');
+    st.innerHTML = '<p class="bad">&#10007; Niciun token in adresa.' +
+      (err ? ' Facebook a raspuns: ' + err : ' Reia linkul de autorizare.') + '</p>';
+  }
+
+  document.getElementById('copy').onclick = function () {
+    if (!ta.value) return;
+    ta.select();
+    navigator.clipboard.writeText(ta.value).then(function () {
+      var b = document.getElementById('copy');
+      b.textContent = 'Copiat!';
+      setTimeout(function () { b.textContent = 'Copiază token-ul'; }, 2000);
+    });
+  };
+})();
+</script>
+</body>
+</html>
