@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Pinterest authorization — madiland.ai</title>
+<style>
+  :root{--bg:#f0f2f5;--card:#fff;--fg:#1c1e21;--muted:#65676b;--box:#f7f8fa;--line:#ccd0d5}
+  @media (prefers-color-scheme: dark){:root{--bg:#18191a;--card:#242526;--fg:#e4e6eb;--muted:#b0b3b8;--box:#3a3b3c;--line:#3e4042}}
+  body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+       max-width:720px;margin:0 auto;padding:40px 16px;color:var(--fg);background:var(--bg)}
+  .card{background:var(--card);border-radius:12px;padding:28px}
+  .sub{color:var(--muted);font-size:14px}
+  textarea{width:100%;height:90px;font:13px ui-monospace,Menlo,monospace;padding:12px;
+           border:1px solid var(--line);border-radius:8px;box-sizing:border-box;background:var(--box);color:var(--fg)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Pinterest authorization</h1>
+  <p class="sub">This page only reads the authorization code from the address bar and shows it.
+  It does not send it anywhere. Private tool of madiland.ai.</p>
+  <p id="status"></p>
+  <textarea id="code" readonly placeholder="authorization code"></textarea>
+</div>
+<script>
+  var q = new URLSearchParams(location.search);
+  var c = q.get('code'), e = q.get('error');
+  document.getElementById('code').value = c || '';
+  document.getElementById('status').textContent = c ? 'Code received. Copy it and give it to the tool.' : (e ? 'Error: ' + e : 'No code in the address.');
+</script>
+</body>
+</html>
